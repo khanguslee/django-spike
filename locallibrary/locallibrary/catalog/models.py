@@ -52,7 +52,7 @@ class BookInstance(models.Model):
         ('m', 'Maintenance'),
         ('o', 'On loan'),
         ('a', 'Available'),
-        ('r', 'Reserverd')
+        ('r', 'Reserved')
     )
 
     status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='m', help_text='Book availability')
@@ -66,8 +66,29 @@ class BookInstance(models.Model):
         """
         return '{0} ({1})'.format(self.id, self.book.title)
 
+class Author(models.Model):
+    """
+    Model representing an author
+    """
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    data_of_birth = models.DateField(null=True, blank=True)
+    date_of_death = models.DateField('Died', null=True, blank=True)
 
+    class Meta:
+        ordering = ["last_name", "first_name"]
 
+    def get_absolute_url(self):
+        """
+        Returns the url to access a particular author instance.
+        """
+        return reverse('author-detail', args=[str(self.id)])
+    
+    def __str__(self):
+        """
+        String for representing the Model object.
+        """
+        return '{0}, {1}'.format(self.last_name, self.first_name)
 
 
 
